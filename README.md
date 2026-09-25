@@ -1,19 +1,18 @@
-# Mami Sambal Sibu — Moving Image Website
+# Mami Sambal Sibu — Refined Motion Website
 
-A from-scratch cinematic restaurant concept focused on moving food photography rather than card-heavy UI.
+A cleaner, more professional client-preview website for Mami Sambal Sibu.
 
-## Motion included
-- Sticky hero with scroll-driven image expansion
-- Pointer parallax on hero image
-- Floating food imagery
-- Scroll-parallax editorial images
-- Pinned best-seller scene wipes (01 → 02 → 03)
-- Vertical-scroll-driven horizontal gallery
-- Sticky editorial menu preview with animated image swaps
-- Moving 4.9 reputation section
-- Full-screen Foodpanda image push/parallax
-- Responsive mobile fallback
-- `prefers-reduced-motion` support
+## Design changes
+- More restrained typography and spacing
+- Cleaner dark/cream brand system
+- Professional navigation and footer
+- Refined moving-image hero and parallax
+- Pinned best-seller scenes retained, with less visual clutter
+- Horizontal image gallery retained
+- Editorial menu with working image preview transitions
+- More balanced reviews, order and visit sections
+- Responsive mobile layout with sticky quick actions
+- Reduced-motion accessibility support
 
 ## Run locally
 
@@ -21,7 +20,7 @@ A from-scratch cinematic restaurant concept focused on moving food photography r
 python -m http.server 8000
 ```
 
-Open http://localhost:8000
+Open `http://localhost:8000`.
 
-## Important
-This is a proposal website. Menu names, business details and food imagery are based on current public Mami Sambal Sibu listings. Before an official launch, the restaurant should confirm final menu copy and supply/approve original image files.
+## Deploy
+Static HTML/CSS/JS; deploy directly to Vercel, Cloudflare Pages, Netlify, or GitHub Pages.

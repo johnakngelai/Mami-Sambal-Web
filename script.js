@@ -56,13 +56,13 @@ function renderScroll(){
   } else {
     const hp=sectionProgress(hero);
     // 0..1: framed image grows into viewport; text clears away.
-    const width=lerp(43,100,hp);
-    const height=lerp(70,100,hp);
+    const width=lerp(47,100,hp);
+    const height=lerp(74,100,hp);
     const right=lerp(5,0,hp);
-    const top=lerp(15,0,hp);
-    const radius=lerp(30,0,hp);
+    const top=lerp(13,0,hp);
+    const radius=lerp(28,0,hp);
     Object.assign(heroWindow.style,{width:`${width}vw`,height:`${height}vh`,right:`${right}vw`,top:`${top}vh`,borderRadius:`${radius}px`});
-    heroImage.style.transform=`scale(${lerp(1.13,1.01,hp)}) translate3d(${lerp(0,-1.5,hp)+pointerX}%,${lerp(0,3,hp)+pointerY}%,0)`;
+    heroImage.style.transform=`scale(${lerp(1.08,1.01,hp)}) translate3d(${lerp(0,-1.2,hp)+pointerX}%,${lerp(0,2,hp)+pointerY}%,0)`;
     heroCopy.style.transform=`translate3d(${lerp(0,-9,hp)}vw,calc(-50% + ${lerp(0,-90,hp)}px),0)`;
     heroCopy.style.opacity=String(clamp(1-hp*1.45));
     if(floatDishA){floatDishA.style.transform=`translate3d(${lerp(0,-22,hp)}vw,${lerp(0,-22,hp)}vh,0) rotate(${lerp(-2,-18,hp)}deg) scale(${lerp(1,.7,hp)})`;floatDishA.style.opacity=String(1-hp);}
@@ -110,15 +110,15 @@ renderScroll();
 if(!reduced){
   window.addEventListener('pointermove',(e)=>{
     if(mobile()||!heroImage) return;
-    pointerX=(e.clientX/window.innerWidth-.5)*2.4;
-    pointerY=(e.clientY/window.innerHeight-.5)*1.8;
+    pointerX=(e.clientX/window.innerWidth-.5)*1.6;
+    pointerY=(e.clientY/window.innerHeight-.5)*1.2;
     renderScroll();
   });
 }
 
 // Section reveals
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.16});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.querySelectorAll('.reveal').forEach(el=>{el.classList.add('motion-pending');observer.observe(el)});
 
 // Extra parallax on manifesto images
 if(!reduced){
@@ -153,14 +153,14 @@ const menuItems=[
   {name:'Sambal Cobek Sotong Sambal Petai',category:'cobek seafood',label:'Sambal Cobek',image:'https://images.deliveryhero.io/image/fd-my/products/1498931583.jpg?width=1400&height=1400'},
   {name:'Nasi Goreng Kampung',category:'rice',label:'Rice',image:'https://images.deliveryhero.io/image/fd-my/Products/1498947699.jpg?width=1400&height=1400'},
   {name:'Nasi Goreng Sambal Petai',category:'rice',label:'Rice',image:'https://images.deliveryhero.io/image/fd-my/Products/1541593904.jpg?width=1400&height=1400'},
-  {name:'Nasi Lemak Udang Sambal Petai',category:'rice seafood',label:'Nasi Lemak',image:'https://images.deliveryhero.io/image/fd-my/products/1447689772.jpg?width=1400&height=1400'},
+  {name:'Nasi Lemak Udang Sambal Petai',category:'nasi-lemak seafood',label:'Nasi Lemak',image:'https://images.deliveryhero.io/image/fd-my/products/1447689772.jpg?width=1400&height=1400'},
   {name:'Sotong Goreng Telur Masin',category:'seafood',label:'Seafood',image:'https://images.deliveryhero.io/image/fd-my/products/1449388169.jpg?width=1400&height=1400'},
   {name:'Udang Goreng Telur Masin',category:'seafood',label:'Seafood',image:'https://images.deliveryhero.io/image/fd-my/products/1498931583.jpg?width=1400&height=1400'},
   {name:'Tahu Bergedil',category:'snacks',label:'Snacks',image:'https://images.deliveryhero.io/image/fd-my/Products/1498947699.jpg?width=1400&height=1400'},
   {name:'Korean Spicy Chicken Wing',category:'snacks',label:'Snacks',image:'https://images.deliveryhero.io/image/fd-my/Products/1541593904.jpg?width=1400&height=1400'},
   {name:'Ribena Soda Lemon',category:'drinks',label:'Drinks',image:'https://images.deliveryhero.io/image/fd-my/products/1447689772.jpg?width=1400&height=1400'},
   {name:'Caramel Latte',category:'drinks',label:'Drinks',image:'https://images.deliveryhero.io/image/fd-my/products/1449388169.jpg?width=1400&height=1400'},
-  {name:'Kelapa Khatulistiwa',category:'drinks',label:'New Menu',image:'https://images.deliveryhero.io/image/fd-my/products/1449388188.jpg?width=1600&height=1600'}
+  {name:'Kelapa Khatulistiwa',category:'drinks new',label:'New Menu',image:'https://images.deliveryhero.io/image/fd-my/products/1449388188.jpg?width=1600&height=1600'}
 ];
 const menuList=document.getElementById('menuList'),search=document.getElementById('menuSearch'),filters=[...document.querySelectorAll('.filter')];
 const preview=document.getElementById('menuPreview'),previewImage=document.getElementById('previewImage');
@@ -171,10 +171,22 @@ function renderMenu(){
   const visible=menuItems.filter(x=>(activeFilter==='all'||x.category.split(' ').includes(activeFilter))&&(!q||x.name.toLowerCase().includes(q)||x.label.toLowerCase().includes(q)));
   menuList.innerHTML=visible.length?visible.map((x,i)=>`<div class="menu-row ${i===0?'active':''}" tabindex="0" data-index="${menuItems.indexOf(x)}"><span class="menu-index">${String(i+1).padStart(2,'0')}</span><span class="menu-name">${x.name}</span><span class="menu-category">${x.label}</span></div>`).join(''):'<p style="color:rgba(255,255,255,.55);padding:28px 0">No matching menu items.</p>';
   const rows=[...menuList.querySelectorAll('.menu-row')];
+  if(visible.length && previewImage){previewImage.src=visible[0].image;previewImage.alt=visible[0].name;const copy=preview?.querySelector('.preview-copy strong');if(copy)copy.textContent=visible[0].name;}
   rows.forEach(row=>{
     const item=menuItems[Number(row.dataset.index)];
-    const activate=()=>{rows.forEach(r=>r.classList.remove('active'));row.classList.add('active');pulsePreview()};
-    row.addEventListener('mouseenter',activate);row.addEventListener('focus',activate);row.addEventListener('click',activate);
+    const activate=()=>{
+      rows.forEach(r=>r.classList.remove('active'));
+      row.classList.add('active');
+      if(previewImage){
+        pulsePreview();
+        window.setTimeout(()=>{previewImage.src=item.image;previewImage.alt=item.name;},80);
+      }
+      const copy=preview?.querySelector('.preview-copy strong');
+      if(copy) copy.textContent=item.name;
+    };
+    row.addEventListener('mouseenter',activate);
+    row.addEventListener('focus',activate);
+    row.addEventListener('click',activate);
   });
 }
 filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(x=>x.classList.remove('active'));btn.classList.add('active');activeFilter=btn.dataset.filter;renderMenu()}));
